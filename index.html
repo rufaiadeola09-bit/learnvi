@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearVix — Computing Learning Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Arial,sans-serif}
+.auth-page{display:none}
+.auth-page.active{display:flex}
+.dashboard-app{display:none}
+.dashboard-app.active{display:block}
+.gradient{background:linear-gradient(135deg,#7412ad,#bd1ed3,#e276ee)}
+.gradient-text{background:linear-gradient(90deg,#7412ad,#d22be5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.glass{background:rgba(255,255,255,.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15)}
+.input-box{transition:.3s ease}
+.input-box:focus-within{border-color:#d946ef;box-shadow:0 0 0 3px rgba(217,70,239,.15)}
+.loader{width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.shake{animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.dashboard-app{background:#f8f6fb;color:#24152d;min-height:100vh}
+.nav-btn{transition:.2s}
+.nav-btn:hover{background:#f5e9fa;color:#7e22ce;transform:translateX(3px)}
+.nav-btn.active{background:#ead0f4;color:#7e22ce;font-weight:800}
+.card{transition:.25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(89,20,112,.12)}
+.dashboard-page{display:none}
+.dashboard-page.active{display:block}
+.modal{display:none}
+.modal.show{display:flex}
+.sidebar{transition:.3s}
+.lesson-box{min-height:380px}
+.premium-glow{box-shadow:0 0 35px rgba(168,85,247,.18)}
+.premium-border{border:1px solid rgba(168,85,247,.25)}
+@media(max-width:1023px){
+.sidebar{left:-280px}
+.sidebar.open{left:0}
+.overlay.show{display:block}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<section id="loginPage" class="auth-page active min-h-screen items-center justify-center p-6 relative overflow-hidden bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="absolute w-72 h-72 bg-fuchsia-600/20 rounded-full blur-3xl top-10 left-10"></div>
+<div class="absolute w-96 h-96 bg-purple-600/20 rounded-full blur-3xl bottom-0 right-0"></div>
+
+<div class="relative z-10 w-full max-w-5xl grid md:grid-cols-2 gap-8 items-center">
+
+<div class="hidden md:block -translate-x-8">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-700 flex items-center justify-center shadow-lg shadow-fuchsia-500/20">
+<i class="fa-solid fa-circle-play text-2xl"></i>
+</div>
+<div>
+<h1 class="text-3xl font-black">Lear<span class="text-fuchsia-400">Vix</span></h1>
+<p class="text-slate-400 text-sm">Learn. Build. Become.</p>
+</div>
+</div>
+
+<h2 class="text-5xl font-black leading-tight mb-6">
+Build your future
+<span class="gradient-text">with technology.</span>
+</h2>
+
+<p class="text-slate-300 text-lg leading-8 max-w-xl">
+Learn computing skills, complete practical projects, track your progress and prepare yourself for the digital world.
+</p>
+
+<div class="grid grid-cols-2 gap-4 mt-8">
+<div class="glass rounded-2xl p-5">
+<i class="fa-solid fa-code text-fuchsia-400 text-2xl mb-3"></i>
+<h3 class="font-bold">Practical Learning</h3>
+<p class="text-sm text-slate-400 mt-1">Learn by building real projects.</p>
+</div>
+<div class="glass rounded-2xl p-5">
+<i class="fa-solid fa-laptop-code text-purple-400 text-2xl mb-3"></i>
+<h3 class="font-bold">Computing Programs</h3>
+<p class="text-sm text-slate-400 mt-1">Choose from modern tech courses.</p>
+</div>
+</div>
+</div>
+
+<div class="glass rounded-3xl p-7 md:p-9 shadow-2xl">
+<div class="md:hidden flex items-center gap-3 mb-8">
+<div class="w-11 h-11 rounded-xl bg-gradient-to-br from-fuchsia-500 to-purple-700 flex items-center justify-center">
+<i class="fa-solid fa-circle-play text-xl"></i>
+</div>
+<h1 class="text-2xl font-black">Lear<span class="text-fuchsia-400">Vix</span></h1>
+</div>
+
+<div class="mb-7">
+<h2 class="text-3xl font-black">Welcome back</h2>
+<p class="text-slate-400 mt-2">Login to continue learning.</p>
+</div>
+
+<form id="loginForm" onsubmit="loginUser(event)">
+<label class="block text-sm font-semibold mb-2">Email</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3 mb-5">
+<i class="fa-solid fa-envelope text-slate-500"></i>
+<input id="loginEmail" type="email" required placeholder="Enter your email" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+</div>
+
+<label class="block text-sm font-semibold mb-2">Password</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3">
+<i class="fa-solid fa-lock text-slate-500"></i>
+<input id="loginPassword" type="password" required placeholder="Enter your password" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+<button type="button" onclick="togglePassword('loginPassword',this)" class="text-slate-500 hover:text-white">
+<i class="fa-solid fa-eye"></i>
+</button>
+</div>
+
+<div class="flex items-center justify-between mt-4 mb-6">
+<label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
+<input id="rememberMe" type="checkbox" class="accent-fuchsia-500">
+Remember me
+</label>
+<button type="button" onclick="showAuthPage('forgotPage')" class="text-fuchsia-400 hover:text-fuchsia-300 text-sm font-semibold">Forgot password?</button>
+</div>
+
+<button id="loginButton" type="submit" class="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 py-3.5 rounded-xl font-bold transition shadow-lg shadow-fuchsia-600/20">
+Login
+</button>
+</form>
+
+<div class="flex items-center gap-3 my-6">
+<div class="h-px bg-slate-700 flex-1"></div>
+<span class="text-slate-500 text-sm">OR</span>
+<div class="h-px bg-slate-700 flex-1"></div>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+<button onclick="socialLogin('Google')" class="border border-slate-700 hover:bg-white/5 rounded-xl py-3 flex items-center justify-center gap-2">
+<i class="fa-brands fa-google"></i>Google
+</button>
+<button onclick="socialLogin('Facebook')" class="border border-slate-700 hover:bg-white/5 rounded-xl py-3 flex items-center justify-center gap-2">
+<i class="fa-brands fa-facebook"></i>Facebook
+</button>
+</div>
+
+<p class="text-center text-slate-400 text-sm mt-7">
+Don't have an account?
+<button onclick="showAuthPage('signupPage')" class="text-fuchsia-400 font-bold hover:text-fuchsia-300">Create account</button>
+</p>
+
+<div id="loginMessage" class="hidden mt-5 p-3 rounded-xl text-sm text-center"></div>
+</div>
+</div>
+</section>
+
+<!-- SIGNUP -->
+
+<section id="signupPage" class="auth-page min-h-screen items-center justify-center p-6 relative overflow-hidden bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="absolute w-96 h-96 bg-fuchsia-600/20 rounded-full blur-3xl top-0 right-0"></div>
+<div class="absolute w-72 h-72 bg-purple-600/20 rounded-full blur-3xl bottom-0 left-0"></div>
+
+<div class="relative z-10 w-full max-w-lg">
+<div class="glass rounded-3xl p-7 md:p-9 shadow-2xl">
+
+<button onclick="showAuthPage('loginPage')" class="text-slate-400 hover:text-white mb-6">
+<i class="fa-solid fa-arrow-left mr-2"></i>Back to login
+</button>
+
+<div class="text-center mb-7">
+<div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-700 flex items-center justify-center mb-4">
+<i class="fa-solid fa-circle-play text-2xl"></i>
+</div>
+<h2 class="text-3xl font-black">Create your account</h2>
+<p class="text-slate-400 mt-2">Start your learning journey with LearVix.</p>
+</div>
+
+<form onsubmit="signupUser(event)">
+<label class="block text-sm font-semibold mb-2">Full Name</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3 mb-4">
+<i class="fa-solid fa-user text-slate-500"></i>
+<input id="signupName" type="text" required placeholder="Enter your full name" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+</div>
+
+<label class="block text-sm font-semibold mb-2">Email</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3 mb-4">
+<i class="fa-solid fa-envelope text-slate-500"></i>
+<input id="signupEmail" type="email" required placeholder="Enter your email" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+</div>
+
+<label class="block text-sm font-semibold mb-2">Phone Number</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3 mb-4">
+<i class="fa-solid fa-phone text-slate-500"></i>
+<input id="signupPhone" type="tel" required placeholder="Enter your phone number" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+</div>
+
+<label class="block text-sm font-semibold mb-2">Password</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3 mb-4">
+<i class="fa-solid fa-lock text-slate-500"></i>
+<input id="signupPassword" type="password" required minlength="6" placeholder="Create a password" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+<button type="button" onclick="togglePassword('signupPassword',this)" class="text-slate-500 hover:text-white">
+<i class="fa-solid fa-eye"></i>
+</button>
+</div>
+
+<label class="block text-sm font-semibold mb-2">Confirm Password</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3">
+<i class="fa-solid fa-shield-halved text-slate-500"></i>
+<input id="signupConfirmPassword" type="password" required minlength="6" placeholder="Confirm your password" class="bg-transparent outline-none w-full text-white placeholder:text-slate-500">
+</div>
+
+<label class="flex items-start gap-3 mt-5 text-sm text-slate-400">
+<input id="terms" type="checkbox" required class="mt-1 accent-fuchsia-500">
+<span>I agree to the LearVix terms and conditions.</span>
+</label>
+
+<button type="submit" class="w-full mt-6 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 py-3.5 rounded-xl font-bold transition">
+Create Account
+</button>
+</form>
+
+<div id="signupMessage" class="hidden mt-5 p-3 rounded-xl text-sm text-center"></div>
+
+<p class="text-center text-slate-400 text-sm mt-6">
+Already have an account?
+<button onclick="showAuthPage('loginPage')" class="text-fuchsia-400 font-bold">Login</button>
+</p>
+</div>
+</div>
+</section>
+
+<!-- FORGOT PASSWORD -->
+
+<section id="forgotPage" class="auth-page min-h-screen items-center justify-center p-6 relative bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="relative z-10 w-full max-w-md">
+<div class="glass rounded-3xl p-8 shadow-2xl">
+
+<button onclick="showAuthPage('loginPage')" class="text-slate-400 hover:text-white mb-7">
+<i class="fa-solid fa-arrow-left mr-2"></i>Back
+</button>
+
+<div class="text-center">
+<div class="w-16 h-16 mx-auto rounded-2xl bg-fuchsia-600/20 flex items-center justify-center mb-5">
+<i class="fa-solid fa-key text-fuchsia-400 text-2xl"></i>
+</div>
+<h2 class="text-3xl font-black">Forgot Password?</h2>
+<p class="text-slate-400 mt-3">Enter your email and we'll send you a verification code.</p>
+</div>
+
+<form onsubmit="sendResetCode(event)" class="mt-7">
+<label class="block text-sm font-semibold mb-2">Email</label>
+<div class="input-box flex items-center gap-3 border border-slate-700 rounded-xl px-4 py-3">
+<i class="fa-solid fa-envelope text-slate-500"></i>
+<input id="forgotEmail" type="email" required placeholder="Enter your email" class="bg-transparent outline-none w-full">
+</div>
+<button type="submit" class="w-full mt-5 bg-gradient-to-r from-fuchsia-600 to-purple-600 py-3.5 rounded-xl font-bold">Send Verification Code</button>
+</form>
+
+<div id="forgotMessage" class="hidden mt-5 p-3 rounded-xl text-sm text-center"></div>
+</div>
+</div>
+</section>
+
+<!-- OTP -->
+
+<section id="otpPage" class="auth-page min-h-screen items-center justify-center p-6 relative bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="relative z-10 w-full max-w-md">
+<div class="glass rounded-3xl p-8 shadow-2xl">
+
+<button onclick="showAuthPage('loginPage')" class="text-slate-400 hover:text-white mb-7">
+<i class="fa-solid fa-arrow-left mr-2"></i>Back to Login
+</button>
+
+<div class="text-center">
+<div class="w-16 h-16 mx-auto rounded-2xl bg-fuchsia-600/20 flex items-center justify-center mb-5">
+<i class="fa-solid fa-shield-halved text-fuchsia-400 text-2xl"></i>
+</div>
+<h2 class="text-3xl font-black">Verify Account</h2>
+<p class="text-slate-400 mt-3">Enter the 6-digit verification code.</p>
+</div>
+
+<form onsubmit="verifyOTP(event)" class="mt-7">
+<input id="otpInput" type="text" maxlength="6" inputmode="numeric" required placeholder="000000" class="w-full text-center text-3xl tracking-[0.5em] bg-black/20 border border-slate-700 rounded-xl py-4 outline-none focus:border-fuchsia-500">
+<button type="submit" class="w-full mt-5 bg-gradient-to-r from-fuchsia-600 to-purple-600 py-3.5 rounded-xl font-bold">Verify Code</button>
+</form>
+
+<p class="text-center text-slate-500 text-sm mt-5">
+Demo verification code:
+<span class="text-fuchsia-400 font-bold">123456</span>
+</p>
+
+<div id="otpMessage" class="hidden mt-5 p-3 rounded-xl text-sm text-center"></div>
+</div>
+</div>
+</section>
+
+<!-- RESET PASSWORD -->
+
+<section id="resetPage" class="auth-page min-h-screen items-center justify-center p-6 relative bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="relative z-10 w-full max-w-md">
+<div class="glass rounded-3xl p-8 shadow-2xl">
+
+<div class="text-center">
+<div class="w-16 h-16 mx-auto rounded-2xl bg-fuchsia-600/20 flex items-center justify-center mb-5">
+<i class="fa-solid fa-lock-open text-fuchsia-400 text-2xl"></i>
+</div>
+<h2 class="text-3xl font-black">Reset Password</h2>
+<p class="text-slate-400 mt-3">Create a new password for your account.</p>
+</div>
+
+<form onsubmit="resetPassword(event)" class="mt-7">
+<label class="block text-sm font-semibold mb-2">New Password</label>
+<input id="newPassword" type="password" minlength="6" required placeholder="Enter new password" class="w-full bg-black/20 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-fuchsia-500">
+
+<label class="block text-sm font-semibold mt-5 mb-2">Confirm Password</label>
+<input id="confirmNewPassword" type="password" minlength="6" required placeholder="Confirm new password" class="w-full bg-black/20 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-fuchsia-500">
+
+<button type="submit" class="w-full mt-6 bg-gradient-to-r from-fuchsia-600 to-purple-600 py-3.5 rounded-xl font-bold">Reset Password</button>
+</form>
+
+<div id="resetMessage" class="hidden mt-5 p-3 rounded-xl text-sm text-center"></div>
+</div>
+</div>
+</section>
+
+<!-- SUCCESS -->
+
+<section id="successPage" class="auth-page min-h-screen items-center justify-center p-6 relative bg-slate-950 text-white">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-950 to-fuchsia-950"></div>
+<div class="relative z-10 w-full max-w-md">
+<div class="glass rounded-3xl p-9 shadow-2xl text-center">
+
+<div class="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center mb-6">
+<i class="fa-solid fa-check text-green-400 text-4xl"></i>
+</div>
+
+<h2 class="text-3xl font-black">Account Created!</h2>
+<p class="text-slate-400 mt-3 leading-7">Welcome to LearVix. Your account has been created successfully.</p>
+
+<button onclick="goToDashboard()" class="w-full mt-7 bg-gradient-to-r from-fuchsia-600 to-purple-600 py-3.5 rounded-xl font-bold">
+Go to Dashboard <i class="fa-solid fa-arrow-right ml-2"></i>
+</button>
+</div>
+</div>
+</section>
+
+<!-- MAIN WEBSITE -->
+
+<div id="dashboardApp" class="dashboard-app">
+
+<div id="overlay" class="overlay hidden fixed inset-0 bg-black/50 z-40" onclick="closeSidebar()"></div>
+
+<aside id="sidebar" class="sidebar fixed z-50 top-0 left-0 w-64 h-screen bg-white border-r flex flex-col">
+<div class="px-6 py-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl gradient text-white flex items-center justify-center">
+<i class="fa-solid fa-circle-play"></i>
+</div>
+<div>
+<div class="text-2xl font-black text-purple-700">LearVix</div>
+<div class="text-[10px] text-gray-400">COMPUTING ACADEMY</div>
+</div>
+</div>
+
+<div class="px-4 pb-5">
+<div class="bg-purple-50 rounded-xl p-3 flex items-center gap-3">
+<img id="sideAvatar" src="https://i.pravatar.cc/100?img=47" class="w-10 h-10 rounded-full object-cover">
+<div class="min-w-0 flex-1">
+<p id="sideName" class="font-bold text-sm truncate">Student</p>
+<div class="flex items-center gap-2">
+<p id="sidePlan" class="text-xs text-gray-500">Free Learner</p>
+<span id="sidePremiumBadge" class="hidden text-[9px] bg-purple-600 text-white px-2 py-0.5 rounded-full font-bold">PREMIUM</span>
+</div>
+</div>
+</div>
+</div>
+
+<nav class="px-3 space-y-1 flex-1 overflow-y-auto">
+<button class="nav-btn active w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('dashboard',this)">
+<i class="fa-solid fa-house w-5"></i>Dashboard
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('courses',this)">
+<i class="fa-solid fa-graduation-cap w-5"></i>My Courses
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('catalog',this)">
+<i class="fa-solid fa-compass w-5"></i>Program Catalog
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('modules',this)">
+<i class="fa-solid fa-layer-group w-5"></i>Modules & Topics
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('classes',this)">
+<i class="fa-solid fa-video w-5"></i>Live Classes
+<span id="classPremiumDot" class="ml-auto text-[9px] bg-purple-100 text-purple-600 px-2 py-1 rounded-full">PRO</span>
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('overview',this)">
+<i class="fa-solid fa-chart-line w-5"></i>Progress
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('certificates',this)">
+<i class="fa-solid fa-award w-5"></i>Certificates
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('payments',this)">
+<i class="fa-solid fa-credit-card w-5"></i>Payments
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('premium',this)">
+<i class="fa-solid fa-crown w-5"></i>Premium
+</button>
+<button class="nav-btn w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm" onclick="showDashboardPage('settings',this)">
+<i class="fa-solid fa-gear w-5"></i>Settings
+</button>
+</nav>
+
+<div class="p-4 border-t">
+<button onclick="logout()" class="w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm text-red-500 hover:bg-red-50">
+<i class="fa-solid fa-right-from-bracket"></i>Log Out
+</button>
+</div>
+</aside>
+
+<main class="lg:ml-64 min-h-screen">
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b px-5 md:px-8 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="lg:hidden w-10 h-10 rounded-lg bg-purple-50 text-purple-700" onclick="openSidebar()">
+<i class="fa-solid fa-bars"></i>
+</button>
+<div>
+<p class="text-xs text-gray-400">LearVix Student Portal</p>
+<h2 id="welcome" class="font-black text-lg">Welcome back, Student</h2>
+</div>
+</div>
+
+<div class="flex items-center gap-3">
+<div class="hidden md:block relative">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
+<input id="search" oninput="globalSearch()" class="w-64 h-10 rounded-lg bg-gray-100 pl-10 pr-4 outline-none focus:ring-2 focus:ring-purple-300" placeholder="Search programs...">
+</div>
+
+<button onclick="openNotifications()" class="relative w-10 h-10 rounded-full hover:bg-purple-50">
+<i class="fa-regular fa-bell"></i>
+<span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+
+<button onclick="showDashboardPage('settings')" class="flex items-center">
+<img id="topAvatar" src="https://i.pravatar.cc/100?img=47" class="w-10 h-10 rounded-full">
+</button>
+</div>
+</header>
+
+<div class="p-5 md:p-8">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="dashboard-page active">
+<div class="mb-7">
+<div class="flex flex-wrap items-center gap-3">
+<div>
+<p class="text-sm text-gray-500">Build skills. Build projects. Build your future.</p>
+<h1 class="text-3xl md:text-4xl font-black mt-1">Dashboard</h1>
+</div>
+<span id="dashboardPlanBadge" class="bg-gray-100 text-gray-600 px-3 py-2 rounded-full text-xs font-bold">FREE LEARNER</span>
+</div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+<div class="gradient text-white rounded-2xl p-5 card">
+<p class="text-sm opacity-80">Programs Enrolled</p>
+<h3 id="statEnrolled" class="text-3xl font-black mt-2">3</h3>
+<p class="text-xs mt-2 opacity-80">Keep learning</p>
+</div>
+
+<div class="bg-white border rounded-2xl p-5 card">
+<p class="text-sm text-gray-500">Completed</p>
+<h3 class="text-3xl font-black mt-2">3</h3>
+<p class="text-xs text-green-600 mt-2">Great progress</p>
+</div>
+
+<div class="bg-white border rounded-2xl p-5 card">
+<p class="text-sm text-gray-500">Certificates</p>
+<h3 id="statCertificates" class="text-3xl font-black mt-2">0</h3>
+<p id="statCertificateText" class="text-xs text-purple-600 mt-2">Premium unlocks certificates</p>
+</div>
+
+<div class="bg-white border rounded-2xl p-5 card">
+<p class="text-sm text-gray-500">Learning Streak</p>
+<h3 class="text-3xl font-black mt-2">7 days 🔥</h3>
+<p class="text-xs text-orange-500 mt-2">Don't break it</p>
+</div>
+</div>
+
+<div id="dashboardPremiumBanner" class="bg-gradient-to-r from-purple-700 to-fuchsia-600 rounded-2xl p-6 text-white mb-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+<div>
+<span class="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">PREMIUM LEARNING</span>
+<h2 class="text-2xl font-black mt-3">Unlock the full LearVix experience</h2>
+<p class="text-purple-100 mt-2">Get live classes, premium certificates and exclusive learning benefits.</p>
+</div>
+<button onclick="showDashboardPage('premium')" class="bg-white text-purple-700 px-6 py-3 rounded-xl font-bold">Upgrade to Premium</button>
+</div>
+</div>
+
+<div class="grid xl:grid-cols-3 gap-6 mb-8">
+<div class="xl:col-span-2">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-black">Continue Learning</h2>
+<button onclick="showDashboardPage('courses')" class="text-purple-600 font-bold text-sm">View all →</button>
+</div>
+
+<div class="gradient rounded-2xl p-5 space-y-4">
+
+<div class="bg-purple-950/60 rounded-xl p-4 text-white">
+<div class="flex flex-col md:flex-row gap-4">
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" class="w-full md:w-40 h-24 object-cover rounded-lg">
+<div class="flex-1">
+<div class="flex justify-between">
+<div>
+<b>Full-Stack Web Development</b>
+<p class="text-xs text-purple-200 mt-1">Module 5 of 8</p>
+</div>
+<b>68%</b>
+</div>
+<div class="h-2 bg-white/20 rounded-full mt-5">
+<div class="h-full bg-pink-300 rounded-full" style="width:68%"></div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<span class="text-xs text-purple-200">14 lessons remaining</span>
+<button onclick="startCourse('Full-Stack Web Development')" class="bg-white text-purple-700 px-4 py-2 rounded-lg text-xs font-bold">Continue</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bg-purple-950/60 rounded-xl p-4 text-white">
+<div class="flex flex-col md:flex-row gap-4">
+<img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" class="w-full md:w-40 h-24 object-cover rounded-lg">
+<div class="flex-1">
+<div class="flex justify-between">
+<div>
+<b>Data Analytics</b>
+<p class="text-xs text-purple-200 mt-1">Module 3 of 7</p>
+</div>
+<b>45%</b>
+</div>
+<div class="h-2 bg-white/20 rounded-full mt-5">
+<div class="h-full bg-pink-300 rounded-full" style="width:45%"></div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<span class="text-xs text-purple-200">22 lessons remaining</span>
+<button onclick="startCourse('Data Analytics')" class="bg-white text-purple-700 px-4 py-2 rounded-lg text-xs font-bold">Continue</button>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-black">Next Class</h2>
+<button onclick="showDashboardPage('classes')" class="text-purple-600 text-sm font-bold">See schedule →</button>
+</div>
+
+<div class="bg-white border rounded-2xl p-5 card">
+<span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">PREMIUM</span>
+<h3 class="font-black text-lg mt-5">Building Your First API</h3>
+<p class="text-sm text-gray-500 mt-2">Today · 4:00 PM — 5:30 PM</p>
+<p class="text-sm mt-4">Learn how frontend applications communicate with backend services.</p>
+<button onclick="handleDashboardClass()" class="w-full gradient text-white py-3 rounded-lg mt-6 font-bold">
+Join Class
+</button>
+</div>
+</div>
+</div>
+
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-black">Explore Computing Programs</h2>
+<button onclick="showDashboardPage('catalog')" class="text-purple-600 font-bold text-sm">Browse all →</button>
+</div>
+
+<div id="dashboardPrograms" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+</section>
+
+<!-- COURSES -->
+
+<section id="courses" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">My Courses</h1>
+<p class="text-gray-500 mt-2">Your active learning programs and progress.</p>
+</div>
+<div id="myCourses" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+</section>
+
+<!-- CATALOG -->
+
+<section id="catalog" class="dashboard-page">
+<div class="mb-7">
+<span class="text-xs font-bold text-purple-600">LEARVIX ACADEMY</span>
+<h1 class="text-3xl md:text-4xl font-black mt-2">Computing Program Catalog</h1>
+<p class="text-gray-500 mt-2 max-w-2xl">Choose a practical program, learn step by step, complete projects and earn certificates.</p>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-6">
+<button class="filter active px-4 py-2 rounded-full bg-purple-600 text-white text-sm font-bold" onclick="filterPrograms('all',this)">All</button>
+<button class="filter px-4 py-2 rounded-full bg-white border text-sm font-bold" onclick="filterPrograms('development',this)">Development</button>
+<button class="filter px-4 py-2 rounded-full bg-white border text-sm font-bold" onclick="filterPrograms('data',this)">Data & AI</button>
+<button class="filter px-4 py-2 rounded-full bg-white border text-sm font-bold" onclick="filterPrograms('security',this)">Cybersecurity</button>
+<button class="filter px-4 py-2 rounded-full bg-white border text-sm font-bold" onclick="filterPrograms('cloud',this)">Cloud & DevOps</button>
+<button class="filter px-4 py-2 rounded-full bg-white border text-sm font-bold" onclick="filterPrograms('design',this)">Design</button>
+</div>
+
+<div id="catalogGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
+
+<!-- LEARNING -->
+
+<section id="learn" class="dashboard-page">
+<div class="mb-5">
+<button onclick="showDashboardPage('courses')" class="text-purple-600 font-bold text-sm">← Back to My Courses</button>
+</div>
+
+<div class="bg-white border rounded-2xl overflow-hidden">
+<div class="gradient text-white p-6 md:p-8">
+<span id="learnCategory" class="text-xs bg-white/20 px-3 py-1 rounded-full">PROGRAM</span>
+<h1 id="learnTitle" class="text-3xl font-black mt-4">Course</h1>
+<p id="learnDesc" class="text-purple-100 mt-2"></p>
+</div>
+
+<div class="grid lg:grid-cols-[280px_1fr]">
+<div id="lessonList" class="border-r bg-gray-50 p-4 space-y-2"></div>
+
+<div class="p-5 md:p-8">
+<div class="flex justify-between items-center mb-5">
+<div>
+<p class="text-xs text-purple-600 font-bold">CURRENT LESSON</p>
+<h2 id="lessonTitle" class="text-2xl font-black mt-1">Lesson</h2>
+</div>
+<span id="lessonCount" class="text-sm text-gray-500"></span>
+</div>
+
+<div class="lesson-box rounded-2xl bg-gray-950 text-white p-6 md:p-8 flex flex-col justify-center">
+<i id="lessonIcon" class="fa-solid fa-code text-4xl text-purple-300"></i>
+<h3 id="lessonHeading" class="text-2xl font-black mt-5"></h3>
+<p id="lessonText" class="text-gray-300 mt-3 leading-7"></p>
+
+<div class="mt-7 flex gap-3">
+<button onclick="previousLesson()" class="border border-white/20 px-5 py-3 rounded-lg font-bold">Previous</button>
+<button onclick="completeLesson()" class="gradient px-5 py-3 rounded-lg font-bold">Complete & Continue</button>
+</div>
+</div>
+
+<div class="mt-6 bg-purple-50 border border-purple-100 rounded-2xl p-5">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-black text-lg"><i class="fa-solid fa-note-sticky text-purple-600 mr-2"></i>My Notes</h3>
+<p class="text-xs text-gray-500 mt-1">Write down what you learned from this lesson.</p>
+</div>
+<button onclick="saveLessonNotes()" class="gradient text-white px-4 py-2 rounded-lg text-sm font-bold">Save Notes</button>
+</div>
+
+<textarea id="lessonNotes" class="w-full mt-4 min-h-[140px] border border-purple-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-purple-300 resize-y" placeholder="Write your notes here..."></textarea>
+<p id="notesStatus" class="text-xs text-green-600 mt-2 hidden">Notes saved successfully.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MODULES -->
+
+<section id="modules" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Modules & Topics</h1>
+<p class="text-gray-500 mt-2">Organized learning paths for your computing journey.</p>
+</div>
+<div id="moduleGrid" class="grid lg:grid-cols-2 gap-5"></div>
+</section>
+
+<!-- CLASSES -->
+
+<section id="classes" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Live Classes</h1>
+<p class="text-gray-500 mt-2">Attend workshops, coding sessions and career events.</p>
+</div>
+<div id="classGrid" class="grid md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+</section>
+
+<!-- OVERVIEW -->
+
+<section id="overview" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Learning Progress</h1>
+<p class="text-gray-500 mt-2">Track your performance across your programs.</p>
+</div>
+
+<div class="grid md:grid-cols-3 gap-5">
+<div class="bg-white border rounded-2xl p-6 card">
+<p class="text-gray-500">Overall Progress</p>
+<b class="text-4xl text-purple-700 block mt-2">62%</b>
+<div class="h-3 bg-gray-200 rounded-full mt-5">
+<div class="h-full bg-purple-600 rounded-full" style="width:62%"></div>
+</div>
+</div>
+
+<div class="bg-white border rounded-2xl p-6 card">
+<p class="text-gray-500">Lessons Completed</p>
+<b class="text-4xl block mt-2" id="lessonStat">84</b>
+<p class="text-sm text-green-600 mt-3">+12 this month</p>
+</div>
+
+<div class="bg-white border rounded-2xl p-6 card">
+<p class="text-gray-500">Learning Hours</p>
+<b class="text-4xl block mt-2">46h</b>
+<p class="text-sm text-purple-600 mt-3">Keep going!</p>
+</div>
+</div>
+
+<div class="bg-white border rounded-2xl p-6 mt-6">
+<h2 class="font-black text-xl mb-6">Program Performance</h2>
+<div id="performance" class="space-y-5"></div>
+</div>
+</section>
+
+<!-- CERTIFICATES -->
+
+<section id="certificates" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Certificates</h1>
+<p class="text-gray-500 mt-2">Your completed achievements.</p>
+</div>
+<div id="certificateGrid" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+</section>
+
+<!-- PAYMENTS -->
+
+<section id="payments" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Payments</h1>
+<p class="text-gray-500 mt-2">View your course purchases and payment history.</p>
+</div>
+
+<div class="bg-white border rounded-2xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+<thead class="bg-purple-50">
+<tr>
+<th class="text-left p-4">DATE</th>
+<th class="text-left p-4">PROGRAM</th>
+<th class="text-left p-4">METHOD</th>
+<th class="text-left p-4">AMOUNT</th>
+<th class="text-left p-4">STATUS</th>
+</tr>
+</thead>
+<tbody id="paymentRows"></tbody>
+</table>
+</div>
+</div>
+
+<div class="bg-purple-50 rounded-2xl p-6 mt-6">
+<h3 class="font-black">Want another program?</h3>
+<p class="text-sm text-gray-600 mt-1">Browse the catalog and choose your next skill.</p>
+<button onclick="showDashboardPage('catalog')" class="gradient text-white px-5 py-3 rounded-lg mt-4 font-bold">Browse Programs</button>
+</div>
+</section>
+
+<!-- PREMIUM -->
+
+<section id="premium" class="dashboard-page">
+<div class="mb-7">
+<div class="flex items-center gap-3">
+<div>
+<span class="text-xs font-bold text-purple-600">LEARVIX PREMIUM</span>
+<h1 class="text-3xl md:text-4xl font-black mt-2">Upgrade Your Learning</h1>
+</div>
+<i class="fa-solid fa-crown text-3xl text-purple-600"></i>
+</div>
+<p class="text-gray-500 mt-2 max-w-2xl">Unlock live classes, premium certificates and an enhanced learning experience.</p>
+</div>
+
+<div id="premiumContent"></div>
+</section>
+
+<!-- SETTINGS -->
+
+<section id="settings" class="dashboard-page">
+<div class="mb-7">
+<h1 class="text-3xl font-black">Account Settings</h1>
+<p class="text-gray-500 mt-2">Manage your profile and learning preferences.</p>
+</div>
+
+<div class="max-w-3xl space-y-6">
+
+<div class="bg-white border rounded-2xl p-6">
+<h2 class="text-xl font-black">Profile</h2>
+
+<div class="flex items-center gap-5 mt-6">
+<img id="settingsAvatar" src="https://i.pravatar.cc/150?img=47" class="w-20 h-20 rounded-full">
+<button onclick="changePhoto()" class="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg font-bold">Change Photo</button>
+</div>
+
+<div class="grid md:grid-cols-2 gap-5 mt-7">
+<div>
+<label class="text-sm font-bold">First Name</label>
+<input id="firstName" class="w-full border rounded-lg p-3 mt-2" value="Student">
+</div>
+
+<div>
+<label class="text-sm font-bold">Last Name</label>
+<input id="lastName" class="w-full border rounded-lg p-3 mt-2">
+</div>
+
+<div class="md:col-span-2">
+<label class="text-sm font-bold">Email</label>
+<input id="email" type="email" class="w-full border rounded-lg p-3 mt-2" value="student@example.com">
+</div>
+</div>
+
+<button onclick="saveProfile()" class="gradient text-white px-6 py-3 rounded-lg mt-6 font-bold">Save Changes</button>
+</div>
+
+<div class="bg-white border rounded-2xl p-6">
+<h2 class="font-black text-xl">Notifications</h2>
+<label class="flex justify-between mt-5">
+<span>Course reminders</span>
+<input type="checkbox" checked class="w-5 h-5 accent-purple-600">
+</label>
+<label class="flex justify-between mt-5">
+<span>Live class reminders</span>
+<input type="checkbox" checked class="w-5 h-5 accent-purple-600">
+</label>
+<label class="flex justify-between mt-5">
+<span>New program announcements</span>
+<input type="checkbox" checked class="w-5 h-5 accent-purple-600">
+</label>
+</div>
+
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<!-- GENERAL MODAL -->
+
+<div id="modal" class="modal fixed inset-0 bg-black/50 items-center justify-center z-[100] px-5">
+<div class="bg-white rounded-2xl w-full max-w-md p-7 text-center">
+<div id="modalIcon" class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+<i class="fa-solid fa-check"></i>
+</div>
+<h2 id="modalTitle" class="text-2xl font-black mt-5">Done</h2>
+<p id="modalText" class="text-gray-500 mt-3 leading-6"></p>
+<button onclick="closeModal()" class="w-full gradient text-white py-3 rounded-lg mt-6 font-bold">Okay</button>
+</div>
+</div>
+
+<!-- PREMIUM PAYMENT MODAL -->
+
+<div id="premiumPaymentModal" class="modal fixed inset-0 bg-black/60 items-center justify-center z-[110] px-5">
+<div class="bg-white rounded-2xl w-full max-w-lg p-7">
+<div class="flex justify-between items-center">
+<div>
+<span class="text-xs text-purple-600 font-bold">LEARVIX PREMIUM</span>
+<h2 class="text-2xl font-black mt-1">Complete Upgrade</h2>
+</div>
+<button onclick="closePremiumPayment()" class="w-10 h-10 rounded-full bg-gray-100">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div>
+
+<div class="bg-purple-50 rounded-xl p-5 mt-6">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-sm text-gray-500">Premium Access</p>
+<h3 class="text-xl font-black">₦50,000</h3>
+</div>
+<i class="fa-solid fa-crown text-3xl text-purple-600"></i>
+</div>
+</div>
+
+<label class="block text-sm font-bold mt-6 mb-2">Payment Method</label>
+<select id="premiumPaymentMethod" class="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-purple-300">
+<option value="Card">Debit / Credit Card</option>
+<option value="Bank Transfer">Bank Transfer</option>
+</select>
+
+<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mt-5">
+<p class="text-xs text-yellow-800">
+<i class="fa-solid fa-circle-info mr-1"></i>
+This is a demo payment for the LearVix prototype. No real money will be charged.
+</p>
+</div>
+
+<button onclick="completePremiumPayment()" class="w-full gradient text-white py-3.5 rounded-xl mt-6 font-bold">
+Pay ₦50,000 & Unlock Premium
+</button>
+</div>
+</div>
+
+<!-- NOTIFICATIONS -->
+
+<div id="notificationModal" class="modal fixed inset-0 bg-black/50 items-center justify-center z-[100] px-5">
+<div class="bg-white rounded-2xl w-full max-w-md p-6">
+<div class="flex justify-between items-center">
+<h2 class="text-xl font-black">Notifications</h2>
+<button onclick="closeNotifications()" class="w-9 h-9 rounded-full bg-gray-100">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div>
+
+<div class="space-y-3 mt-5">
+<div class="p-4 bg-purple-50 rounded-xl">
+<b class="text-sm">New lesson available</b>
+<p class="text-xs text-gray-500 mt-1">Your next Web Development lesson is ready.</p>
+</div>
+<div class="p-4 bg-green-50 rounded-xl">
+<b class="text-sm">Certificate earned</b>
+<p class="text-xs text-gray-500 mt-1">Your Data Analytics certificate is available.</p>
+</div>
+<div id="liveNotification" class="p-4 bg-yellow-50 rounded-xl">
+<b class="text-sm">Upcoming class</b>
+<p class="text-xs text-gray-500 mt-1">Building Your First API starts today at 4PM.</p>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+
+const programs=[
+{id:'fullstack',title:'Full-Stack Web Development',cat:'development',tag:'DEVELOPMENT',lessons:48,price:79000,img:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80',desc:'Build modern websites and complete web applications from frontend to backend.',icon:'fa-code'},
+{id:'frontend',title:'Frontend Development',cat:'development',tag:'DEVELOPMENT',lessons:32,price:59000,img:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',desc:'Master HTML, CSS, JavaScript, responsive design and modern frontend workflows.',icon:'fa-laptop-code'},
+{id:'python',title:'Python Programming',cat:'development',tag:'PROGRAMMING',lessons:36,price:65000,img:'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80',desc:'Learn Python fundamentals, functions, OOP, automation and practical projects.',icon:'fa-brands fa-python'},
+{id:'mobile',title:'Mobile App Development',cat:'development',tag:'MOBILE',lessons:40,price:85000,img:'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80',desc:'Design and build useful mobile applications with modern development tools.',icon:'fa-mobile-screen'},
+{id:'data',title:'Data Analytics',cat:'data',tag:'DATA & AI',lessons:42,price:69000,img:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80',desc:'Turn raw data into useful insights using spreadsheets, SQL, Python and dashboards.',icon:'fa-chart-column'},
+{id:'ai',title:'Artificial Intelligence & Machine Learning',cat:'data',tag:'AI & ML',lessons:50,price:99000,img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80',desc:'Understand machine learning concepts and build beginner-friendly AI projects.',icon:'fa-brain'},
+{id:'cyber',title:'Cybersecurity Fundamentals',cat:'security',tag:'SECURITY',lessons:38,price:85000,img:'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80',desc:'Learn security principles, threats, identity, networks and defensive practices.',icon:'fa-shield-halved'},
+{id:'ethical',title:'Ethical Hacking & Penetration Testing',cat:'security',tag:'CYBERSECURITY',lessons:44,price:95000,img:'https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=900&q=80',desc:'Explore ethical security testing in authorized labs and learn how systems are assessed.',icon:'fa-user-secret'},
+{id:'cloud',title:'Cloud Computing',cat:'cloud',tag:'CLOUD',lessons:35,price:89000,img:'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80',desc:'Learn cloud concepts, deployment, storage, networking and scalable applications.',icon:'fa-cloud'},
+{id:'devops',title:'DevOps & CI/CD',cat:'cloud',tag:'DEVOPS',lessons:34,price:90000,img:'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80',desc:'Learn Git, automation, continuous integration, deployment and infrastructure basics.',icon:'fa-gears'},
+{id:'database',title:'Database Management & SQL',cat:'data',tag:'DATABASE',lessons:30,price:60000,img:'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=900&q=80',desc:'Design databases and write practical SQL queries for real applications.',icon:'fa-database'},
+{id:'uiux',title:'UI/UX & Product Design',cat:'design',tag:'DESIGN',lessons:31,price:55000,img:'https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=900&q=80',desc:'Research users, create wireframes, prototypes and polished digital product experiences.',icon:'fa-pen-ruler'},
+{id:'network',title:'Computer Networking',cat:'security',tag:'NETWORKING',lessons:33,price:62000,img:'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80',desc:'Understand IP addresses, routing, switching, protocols and network troubleshooting.',icon:'fa-network-wired'},
+{id:'game',title:'Game Development',cat:'development',tag:'GAME DEV',lessons:45,price:88000,img:'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80',desc:'Learn game logic, assets, interaction and the fundamentals of building games.',icon:'fa-gamepad'},
+{id:'blockchain',title:'Blockchain Development',cat:'development',tag:'BLOCKCHAIN',lessons:40,price:95000,img:'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80',desc:'Understand blockchain architecture, smart contracts and decentralized applications.',icon:'fa-link'}
+];
+
+const classes=[
+['Building Your First API','Today · 4:00 PM','LIVE SOON','Learn how frontend applications communicate with backend services.'],
+['Python Project Lab','Today · 7:00 PM','LIVE SOON','Build a practical Python automation project with an instructor.'],
+['Cybersecurity: Protecting Accounts','Tomorrow · 2:00 PM','UPCOMING','Learn practical account and identity security principles.'],
+['Data Analytics Workshop','Tomorrow · 5:00 PM','UPCOMING','Create a useful dashboard from a real-world dataset.'],
+['Cloud Deployment Masterclass','Friday · 3:00 PM','UPCOMING','Deploy a web application and understand cloud hosting.'],
+['Career & Portfolio Review','Friday · 6:00 PM','UPCOMING','Get your computing portfolio ready for internships and jobs.']
+];
+
+let currentProgram=null;
+let currentLesson=0;
+let enrolled=JSON.parse(localStorage.getItem('learvixEnrolled')||'["fullstack","data","uiux"]');
+let isPremium=localStorage.getItem('learvixPremium')==='true';
+
+function refreshPremiumStatus(){
+isPremium=localStorage.getItem('learvixPremium')==='true';
+return isPremium;
+}
+
+function showAuthPage(id){
+document.querySelectorAll('.auth-page').forEach(p=>p.classList.remove('active'));
+const page=document.getElementById(id);
+if(page)page.classList.add('active');
+window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showDashboard(){
+document.querySelectorAll('.auth-page').forEach(p=>p.classList.remove('active'));
+document.getElementById('dashboardApp').classList.add('active');
+refreshPremiumStatus();
+loadUser();
+renderDashboard();
+renderCatalog();
+renderMyCourses();
+renderCertificates();
+renderPayments();
+renderModules();
+renderClasses();
+renderPerformance();
+renderPremium();
+updatePremiumUI();
+window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showDashboardPage(id,btn){
+document.querySelectorAll('.dashboard-page').forEach(p=>p.classList.remove('active'));
+const page=document.getElementById(id);
+if(page)page.classList.add('active');
+
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+
+if(btn){
+btn.classList.add('active');
+}else{
+document.querySelectorAll('.nav-btn').forEach(b=>{
+if((b.getAttribute('onclick')||'').includes("'"+id+"'"))b.classList.add('active');
+});
+}
+
+closeSidebar();
+window.scrollTo({top:0,behavior:'smooth'});
+
+if(id==='catalog')renderCatalog();
+if(id==='courses')renderMyCourses();
+if(id==='modules')renderModules();
+if(id==='classes')renderClasses();
+if(id==='certificates')renderCertificates();
+if(id==='payments')renderPayments();
+if(id==='overview')renderPerformance();
+if(id==='premium')renderPremium();
+}
+
+function showMessage(id,message,type='error'){
+const el=document.getElementById(id);
+if(!el)return;
+
+el.classList.remove('hidden','bg-red-500/10','text-red-400','bg-green-500/10','text-green-400');
+
+if(type==='success'){
+el.classList.add('bg-green-500/10','text-green-400');
+}else{
+el.classList.add('bg-red-500/10','text-red-400');
+}
+
+el.textContent=message;
+}
+
+function togglePassword(id,button){
+const input=document.getElementById(id);
+if(input.type==='password'){
+input.type='text';
+button.innerHTML='<i class="fa-solid fa-eye-slash"></i>';
+}else{
+input.type='password';
+button.innerHTML='<i class="fa-solid fa-eye"></i>';
+}
+}
+
+function signupUser(event){
+event.preventDefault();
+
+const name=document.getElementById('signupName').value.trim();
+const email=document.getElementById('signupEmail').value.trim().toLowerCase();
+const phone=document.getElementById('signupPhone').value.trim();
+const password=document.getElementById('signupPassword').value;
+const confirmPassword=document.getElementById('signupConfirmPassword').value;
+
+if(!name||!email||!phone||!password||!confirmPassword){
+showMessage('signupMessage','Please fill in all fields.');
+return;
+}
+
+if(password.length<6){
+showMessage('signupMessage','Password must contain at least 6 characters.');
+return;
+}
+
+if(password!==confirmPassword){
+showMessage('signupMessage','Passwords do not match.');
+return;
+}
+
+const existingUser=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(existingUser&&existingUser.email===email){
+showMessage('signupMessage','An account with this email already exists. Please login.');
+return;
+}
+
+const pendingUser={
+name:name,
+email:email,
+phone:phone,
+password:password
+};
+
+localStorage.setItem('learvixPendingUser',JSON.stringify(pendingUser));
+
+showAuthPage('otpPage');
+
+document.getElementById('otpInput').value='';
+
+showMessage('otpMessage','Verification code sent. For this demo use 123456.','success');
+}
+
+function verifyOTP(event){
+event.preventDefault();
+
+const otp=document.getElementById('otpInput').value.trim();
+
+if(otp!=='123456'){
+showMessage('otpMessage','Invalid verification code. Use 123456.');
+return;
+}
+
+const pendingUser=JSON.parse(localStorage.getItem('learvixPendingUser')||'null');
+
+if(!pendingUser){
+showMessage('otpMessage','No signup information was found. Please register again.');
+return;
+}
+
+localStorage.setItem('learvixUser',JSON.stringify(pendingUser));
+localStorage.setItem('learvixName',pendingUser.name);
+localStorage.setItem('learvixEmail',pendingUser.email);
+localStorage.setItem('learvixPhone',pendingUser.phone);
+localStorage.setItem('learvixLoggedIn','true');
+localStorage.removeItem('learvixPendingUser');
+
+localStorage.removeItem('learvixPremium');
+
+showAuthPage('successPage');
+}
+
+function loginUser(event){
+event.preventDefault();
+
+const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+const password=document.getElementById('loginPassword').value;
+
+const savedUser=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(!savedUser){
+showMessage('loginMessage','No LearVix account found. Please create an account first.');
+return;
+}
+
+if(email!==savedUser.email||password!==savedUser.password){
+showMessage('loginMessage','Incorrect email or password.');
+
+document.getElementById('loginForm').classList.add('shake');
+
+setTimeout(()=>{
+document.getElementById('loginForm').classList.remove('shake');
+},400);
+
+return;
+}
+
+localStorage.setItem('learvixLoggedIn','true');
+localStorage.setItem('learvixName',savedUser.name);
+localStorage.setItem('learvixEmail',savedUser.email);
+localStorage.setItem('learvixPhone',savedUser.phone||'');
+
+if(document.getElementById('rememberMe').checked){
+localStorage.setItem('learvixRememberedEmail',email);
+}else{
+localStorage.removeItem('learvixRememberedEmail');
+}
+
+const button=document.getElementById('loginButton');
+
+button.disabled=true;
+button.innerHTML='<span class="flex items-center justify-center gap-2"><span class="loader"></span>Logging in...</span>';
+
+setTimeout(()=>{
+button.disabled=false;
+button.innerHTML='Login';
+showDashboard();
+},700);
+}
+
+function socialLogin(provider){
+let user=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(!user){
+user={
+name:provider+' Learner',
+email:provider.toLowerCase()+'@learvix.demo',
+phone:'',
+password:'social-login'
+};
+
+localStorage.setItem('learvixUser',JSON.stringify(user));
+}
+
+localStorage.setItem('learvixName',user.name);
+localStorage.setItem('learvixEmail',user.email);
+localStorage.setItem('learvixPhone',user.phone||'');
+localStorage.setItem('learvixLoggedIn','true');
+
+showDashboard();
+}
+
+function sendResetCode(event){
+event.preventDefault();
+
+const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
+const user=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(!user||user.email!==email){
+showMessage('forgotMessage','No LearVix account was found with this email.');
+return;
+}
+
+localStorage.setItem('learvixResetEmail',email);
+
+showAuthPage('otpPage');
+
+showMessage('otpMessage','Reset code sent. For this demo use 123456.','success');
+}
+
+function resetPassword(event){
+event.preventDefault();
+
+const password=document.getElementById('newPassword').value;
+const confirmPassword=document.getElementById('confirmNewPassword').value;
+
+if(password!==confirmPassword){
+showMessage('resetMessage','Passwords do not match.');
+return;
+}
+
+const user=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(!user){
+showMessage('resetMessage','Account not found.');
+return;
+}
+
+user.password=password;
+
+localStorage.setItem('learvixUser',JSON.stringify(user));
+
+showMessage('resetMessage','Password reset successfully. You can now login.','success');
+
+setTimeout(()=>{
+showAuthPage('loginPage');
+},1200);
+}
+
+function goToDashboard(){
+localStorage.setItem('learvixLoggedIn','true');
+showDashboard();
+}
+
+function money(n){
+return '₦'+n.toLocaleString('en-NG');
+}
+
+function findProgram(id){
+return programs.find(p=>p.id===id);
+}
+
+function programCard(p,buttonText='View Program'){
+return `
+<div class="card bg-white border rounded-2xl overflow-hidden">
+<img src="${p.img}" class="w-full h-44 object-cover">
+<div class="p-5">
+<span class="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-1 rounded">${p.tag}</span>
+<h3 class="font-black text-lg mt-3">${p.title}</h3>
+<p class="text-sm text-gray-500 mt-2 leading-6">${p.desc}</p>
+<div class="flex justify-between items-center mt-4 text-xs text-gray-500">
+<span><i class="fa-regular fa-clock mr-1"></i>${p.lessons} lessons</span>
+<b class="text-gray-800">${money(p.price)}</b>
+</div>
+<button onclick="openProgram('${p.id}')" class="w-full gradient text-white py-3 rounded-lg mt-5 font-bold">${buttonText}</button>
+</div>
+</div>`;
+}
+
+function renderDashboard(){
+document.getElementById('dashboardPrograms').innerHTML=programs.slice(0,6).map(p=>programCard(p)).join('');
+updatePremiumUI();
+}
+
+function updatePremiumUI(){
+refreshPremiumStatus();
+
+const badge=document.getElementById('dashboardPlanBadge');
+const sidePlan=document.getElementById('sidePlan');
+const sidePremiumBadge=document.getElementById('sidePremiumBadge');
+const banner=document.getElementById('dashboardPremiumBanner');
+const statCertificates=document.getElementById('statCertificates');
+const statCertificateText=document.getElementById('statCertificateText');
+const classPremiumDot=document.getElementById('classPremiumDot');
+
+if(isPremium){
+badge.textContent='PREMIUM LEARNER';
+badge.className='bg-purple-100 text-purple-700 px-3 py-2 rounded-full text-xs font-bold';
+
+sidePlan.textContent='Premium Learner';
+sidePlan.className='text-xs text-purple-600 font-bold';
+
+sidePremiumBadge.classList.remove('hidden');
+
+statCertificates.textContent='3';
+statCertificateText.textContent='Premium certificates unlocked';
+
+banner.innerHTML=`
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+<div>
+<span class="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">PREMIUM ACTIVE</span>
+<h2 class="text-2xl font-black mt-3">You are a Premium Learner 👑</h2>
+<p class="text-purple-100 mt-2">Live classes and premium certificates are unlocked.</p>
+</div>
+<button onclick="showDashboardPage('classes')" class="bg-white text-purple-700 px-6 py-3 rounded-xl font-bold">View Live Classes</button>
+</div>`;
+
+classPremiumDot.textContent='LIVE';
+classPremiumDot.className='ml-auto text-[9px] bg-green-100 text-green-600 px-2 py-1 rounded-full';
+}else{
+badge.textContent='FREE LEARNER';
+badge.className='bg-gray-100 text-gray-600 px-3 py-2 rounded-full text-xs font-bold';
+
+sidePlan.textContent='Free Learner';
+sidePlan.className='text-xs text-gray-500';
+
+sidePremiumBadge.classList.add('hidden');
+
+statCertificates.textContent='0';
+statCertificateText.textContent='Premium unlocks certificates';
+
+banner.innerHTML=`
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+<div>
+<span class="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">PREMIUM LEARNING</span>
+<h2 class="text-2xl font-black mt-3">Unlock the full LearVix experience</h2>
+<p class="text-purple-100 mt-2">Get live classes, premium certificates and an enhanced learning experience.</p>
+</div>
+<button onclick="showDashboardPage('premium')" class="bg-white text-purple-700 px-6 py-3 rounded-xl font-bold">Upgrade to Premium</button>
+</div>`;
+
+classPremiumDot.textContent='PRO';
+classPremiumDot.className='ml-auto text-[9px] bg-purple-100 text-purple-600 px-2 py-1 rounded-full';
+}
+
+renderCertificates();
+renderPremium();
+}
+
+function renderCatalog(filter='all'){
+const list=filter==='all'?programs:programs.filter(p=>p.cat===filter);
+document.getElementById('catalogGrid').innerHTML=list.map(p=>programCard(p)).join('');
+}
+
+function filterPrograms(cat,btn){
+document.querySelectorAll('.filter').forEach(x=>{
+x.classList.remove('bg-purple-600','text-white');
+x.classList.add('bg-white');
+});
+
+btn.classList.add('bg-purple-600','text-white');
+btn.classList.remove('bg-white');
+
+renderCatalog(cat);
+}
+
+function renderMyCourses(){
+document.getElementById('myCourses').innerHTML=enrolled.map(id=>findProgram(id)).filter(Boolean).map(p=>{
+const progress=p.id==='fullstack'?68:p.id==='data'?45:p.id==='uiux'?75:20;
+
+return `
+<div class="card bg-white border rounded-2xl overflow-hidden">
+<img src="${p.img}" class="w-full h-44 object-cover">
+<div class="p-5">
+<span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">ENROLLED</span>
+<h2 class="font-black text-lg mt-3">${p.title}</h2>
+<div class="flex justify-between text-xs mt-5">
+<span>Progress</span>
+<b>${progress}%</b>
+</div>
+<div class="h-2 bg-gray-200 rounded-full mt-2">
+<div class="h-full bg-purple-600 rounded-full" style="width:${progress}%"></div>
+</div>
+<button onclick="startCourse('${p.title}')" class="w-full gradient text-white py-3 rounded-lg mt-5 font-bold">Continue Learning</button>
+</div>
+</div>`;
+}).join('');
+
+document.getElementById('statEnrolled').textContent=enrolled.length;
+}
+
+function openProgram(id){
+const p=findProgram(id);
+
+if(enrolled.includes(id)){
+startCourse(p.title);
+return;
+}
+
+document.getElementById('modalTitle').textContent=p.title;
+document.getElementById('modalIcon').innerHTML='<i class="fa-solid fa-graduation-cap"></i>';
+document.getElementById('modalText').innerHTML=`${p.desc}<br><br><b>${p.lessons} lessons · ${money(p.price)}</b><br><button onclick="enroll('${p.id}')" class="gradient text-white px-5 py-3 rounded-lg font-bold mt-4">Enroll Now</button>`;
+document.getElementById('modal').classList.add('show');
+}
+
+function enroll(id){
+if(!enrolled.includes(id)){
+enrolled.push(id);
+localStorage.setItem('learvixEnrolled',JSON.stringify(enrolled));
+}
+
+closeModal();
+renderMyCourses();
+
+modal('Enrollment Successful','The program has been added to My Courses. You can start learning immediately.','fa-circle-check');
+}
+
+function startCourse(name){
+const p=programs.find(x=>x.title===name)||programs[0];
+
+currentProgram=p;
+currentLesson=0;
+
+document.getElementById('learnTitle').textContent=p.title;
+document.getElementById('learnCategory').textContent=p.tag;
+document.getElementById('learnDesc').textContent=p.desc;
+
+buildLessons(p);
+showDashboardPage('learn');
+}
+
+function buildLessons(p){
+const names=['Getting Started','Core Concepts','Practical Example','Build a Mini Project','Quiz & Assessment','Real-World Project'];
+
+document.getElementById('lessonList').innerHTML=names.map((n,i)=>`
+<button onclick="selectLesson(${i})" class="lessonBtn w-full text-left p-3 rounded-lg text-sm ${i===0?'bg-purple-100 text-purple-700 font-bold':'hover:bg-white'}">
+<i class="fa-solid ${i<2?'fa-circle-check':'fa-circle'} mr-2"></i>${i+1}. ${n}
+</button>`).join('');
+
+selectLesson(0);
+}
+
+function getNotesKey(){
+if(!currentProgram)return'';
+return'learvixNotes_'+currentProgram.id+'_'+currentLesson;
+}
+
+function loadLessonNotes(){
+const notes=localStorage.getItem(getNotesKey())||'';
+const textarea=document.getElementById('lessonNotes');
+if(textarea)textarea.value=notes;
+const status=document.getElementById('notesStatus');
+if(status)status.classList.add('hidden');
+}
+
+function saveLessonNotes(){
+const textarea=document.getElementById('lessonNotes');
+
+if(!textarea||!currentProgram)return;
+
+localStorage.setItem(getNotesKey(),textarea.value);
+
+const status=document.getElementById('notesStatus');
+
+status.textContent='Notes saved successfully.';
+status.classList.remove('hidden');
+
+setTimeout(()=>{
+status.classList.add('hidden');
+},2000);
+}
+
+function selectLesson(i){
+currentLesson=i;
+
+const p=currentProgram;
+
+const topics=[
+'Introduction and setup',
+'Important concepts and terminology',
+'Follow a guided practical example',
+'Apply the skill to a mini project',
+'Test what you have learned',
+'Complete a portfolio-ready project'
+];
+
+document.getElementById('lessonTitle').textContent=topics[i];
+document.getElementById('lessonHeading').textContent=topics[i];
+
+document.getElementById('lessonText').textContent=`This lesson is part of ${p.title}. Work through the material, practice what you learn, then mark the lesson complete to continue to the next topic.`;
+
+document.getElementById('lessonCount').textContent=`Lesson ${i+1} of 6`;
+
+document.getElementById('lessonIcon').className='fa-solid '+p.icon+' text-4xl text-purple-300';
+
+document.querySelectorAll('.lessonBtn').forEach((b,n)=>{
+b.classList.toggle('bg-purple-100',n===i);
+b.classList.toggle('text-purple-700',n===i);
+b.classList.toggle('font-bold',n===i);
+});
+
+loadLessonNotes();
+}
+
+function previousLesson(){
+if(currentLesson>0)selectLesson(currentLesson-1);
+}
+
+function completeLesson(){
+if(currentLesson<5){
+selectLesson(currentLesson+1);
+modal('Lesson Completed','Nice work! You have moved to the next lesson.','fa-circle-check');
+}else{
+modal('Program Milestone','You completed the final lesson in this demo learning path. Premium certificates are available to Premium learners after assessment completion.','fa-award');
+}
+}
+
+function renderModules(){
+const topics=[
+'HTML & CSS Foundations',
+'JavaScript & Programming Logic',
+'Git & GitHub',
+'APIs & Backend Basics',
+'Databases',
+'Testing & Deployment'
+];
+
+document.getElementById('moduleGrid').innerHTML=topics.map((t,i)=>`
+<div class="bg-white border rounded-2xl p-5 card">
+<div class="flex justify-between">
+<div>
+<span class="text-xs text-purple-600 font-bold">MODULE ${i+1}</span>
+<h2 class="font-black mt-2">${t}</h2>
+</div>
+<i class="fa-solid ${i<2?'fa-circle-check':'fa-circle'} ${i<2?'text-green-500':'text-gray-300'}"></i>
+</div>
+<p class="text-sm text-gray-500 mt-3">Learn ${t.toLowerCase()} through guided lessons and practical activities.</p>
+<button onclick="openModule('${t}')" class="mt-5 text-purple-600 font-bold text-sm">Open Module →</button>
+</div>`).join('');
+}
+
+function openModule(name){
+modal(name,'Module opened. Choose a lesson, practice the concept and complete the activity to track your progress.','fa-layer-group');
+}
+
+function renderClasses(){
+if(!isPremium){
+document.getElementById('classGrid').innerHTML=`
+<div class="col-span-full bg-white border rounded-2xl p-8 md:p-12 text-center premium-glow">
+<div class="w-20 h-20 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-3xl">
+<i class="fa-solid fa-lock"></i>
+</div>
+<h2 class="text-2xl font-black mt-6">Live Classes are Premium</h2>
+<p class="text-gray-500 max-w-xl mx-auto mt-3 leading-7">
+Free learners can continue studying lessons and taking notes, but live instructor classes are available only to Premium learners.
+</p>
+<button onclick="showDashboardPage('premium')" class="gradient text-white px-6 py-3 rounded-xl mt-6 font-bold">
+<i class="fa-solid fa-crown mr-2"></i>Upgrade to Premium
+</button>
+</div>`;
+return;
+}
+
+document.getElementById('classGrid').innerHTML=classes.map((c,i)=>`
+<div class="bg-white border rounded-2xl p-6 card premium-border">
+<div class="flex justify-between">
+<span class="${i<2?'bg-green-100 text-green-600':'bg-purple-100 text-purple-600'} px-3 py-1 rounded-full text-xs font-bold">${c[2]}</span>
+<i class="fa-solid fa-video text-purple-600"></i>
+</div>
+<h2 class="text-xl font-black mt-5">${c[0]}</h2>
+<p class="text-gray-500 text-sm mt-2">${c[1]}</p>
+<p class="text-sm mt-5">${c[3]}</p>
+<button onclick="joinClass('${c[0]}')" class="w-full ${i<2?'gradient text-white':'border border-purple-600 text-purple-600'} py-3 rounded-lg mt-6 font-bold">${i<2?'Join Class':'View Class'}</button>
+</div>`).join('');
+}
+
+function handleDashboardClass(){
+if(!isPremium){
+showDashboardPage('premium');
+modal('Premium Required','Live classes are available only to Premium learners. Upgrade your account to unlock instructor-led live classes.','fa-crown');
+return;
+}
+
+joinClass('Building Your First API');
+}
+
+function joinClass(name){
+if(!isPremium){
+modal('Premium Required','Live classes are available only to Premium learners. Upgrade to Premium to join this class.','fa-lock');
+return;
+}
+
+modal(name,'The classroom page is ready. In a live deployment, connect this button to your Zoom, Google Meet or built-in video classroom URL.','fa-video');
+}
+
+function renderPerformance(){
+document.getElementById('performance').innerHTML=enrolled.map(id=>findProgram(id)).filter(Boolean).map(p=>{
+let v=p.id==='fullstack'?68:p.id==='data'?45:p.id==='uiux'?75:20;
+
+return `
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span>${p.title}</span>
+<b>${v}%</b>
+</div>
+<div class="h-3 bg-gray-200 rounded-full">
+<div class="h-full bg-purple-600 rounded-full" style="width:${v}%"></div>
+</div>
+</div>`;
+}).join('');
+}
+
+function renderCertificates(){
+const grid=document.getElementById('certificateGrid');
+
+if(!isPremium){
+grid.innerHTML=`
+<div class="col-span-full bg-white border rounded-2xl p-8 md:p-12 text-center">
+<div class="w-20 h-20 mx-auto rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-3xl">
+<i class="fa-solid fa-lock"></i>
+</div>
+<h2 class="text-2xl font-black mt-6">Certificates are Premium</h2>
+<p class="text-gray-500 max-w-xl mx-auto mt-3 leading-7">
+Free learners can complete lessons and track their progress, but official LearVix certificates are reserved for Premium learners.
+</p>
+<div class="bg-purple-50 rounded-xl p-5 max-w-md mx-auto mt-6 text-left">
+<div class="flex items-center gap-3">
+<i class="fa-solid fa-crown text-purple-600 text-xl"></i>
+<div>
+<b class="text-sm">Premium Certificate Benefits</b>
+<p class="text-xs text-gray-500 mt-1">Branded certificate design, learner name, course title and downloadable certificate.</p>
+</div>
+</div>
+</div>
+<button onclick="showDashboardPage('premium')" class="gradient text-white px-6 py-3 rounded-xl mt-6 font-bold">
+Upgrade to Premium
+</button>
+</div>`;
+return;
+}
+
+const certs=['Data Analytics','UI/UX & Product Design','Python Programming'];
+
+grid.innerHTML=certs.map(c=>`
+<div class="bg-white border rounded-2xl p-5 premium-glow">
+<div class="bg-gradient-to-br from-purple-900 via-purple-700 to-fuchsia-500 rounded-xl p-8 text-center text-white border-4 border-yellow-300/70">
+<div class="flex justify-center">
+<div class="w-14 h-14 rounded-full border-2 border-yellow-300 flex items-center justify-center">
+<i class="fa-solid fa-crown text-yellow-300 text-2xl"></i>
+</div>
+</div>
+<p class="text-[10px] mt-4 tracking-[.2em] text-yellow-200 font-bold">LEARVIX PREMIUM</p>
+<p class="text-xs mt-3 opacity-80">CERTIFICATE OF COMPLETION</p>
+<h2 class="text-xl font-black mt-3">${c}</h2>
+<div class="h-px bg-yellow-300/50 mt-5"></div>
+<p class="text-sm mt-4">${localStorage.getItem('learvixName')||'LearVix Student'}</p>
+<p class="text-[10px] text-purple-100 mt-2">Premium Learner</p>
+</div>
+<div class="flex gap-3 mt-4">
+<button onclick="downloadCertificate('${c}')" class="flex-1 bg-purple-600 text-white py-2 rounded-lg text-sm font-bold">
+<i class="fa-solid fa-download mr-2"></i>Download
+</button>
+<button onclick="copyCertificate('${c}')" class="flex-1 border py-2 rounded-lg text-sm font-bold">Copy Link</button>
+</div>
+</div>`).join('');
+}
+
+function downloadCertificate(course){
+if(!isPremium){
+modal('Premium Required','Certificates are available only to Premium learners.','fa-lock');
+return;
+}
+
+const text=`LEARVIX PREMIUM
+CERTIFICATE OF COMPLETION
+
+This premium certificate is proudly presented to ${localStorage.getItem('learvixName')||'LearVix Student'}
+
+for successfully completing
+${course}
+
+PREMIUM LEARNER
+
+LearVix Computing Academy`;
+
+const blob=new Blob([text],{type:'text/plain'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+
+a.href=url;
+a.download=course.replaceAll(' ','_')+'_Premium_Certificate.txt';
+a.click();
+
+URL.revokeObjectURL(url);
+}
+
+function copyCertificate(course){
+if(!isPremium){
+modal('Premium Required','Certificate links are available only to Premium learners.','fa-lock');
+return;
+}
+
+if(navigator.clipboard){
+navigator.clipboard.writeText(location.href+'#premium-certificate-'+course.replaceAll(' ','-')).then(()=>{
+modal('Link Copied','Premium certificate link copied to your clipboard.','fa-link');
+});
+}
+}
+
+function renderPayments(){
+const rows=[
+['Sep 2, 2026','Full-Stack Web Development','Card',79000],
+['Aug 20, 2026','Data Analytics','Card',69000],
+['Aug 5, 2026','UI/UX & Product Design','Card',55000]
+];
+
+if(isPremium){
+rows.unshift([
+localStorage.getItem('learvixPremiumDate')||'Sep 13, 2026',
+'LearVix Premium',
+localStorage.getItem('learvixPremiumMethod')||'Card',
+50000
+]);
+}
+
+document.getElementById('paymentRows').innerHTML=rows.map(r=>`
+<tr class="border-t">
+<td class="p-4">${r[0]}</td>
+<td class="p-4 font-bold">${r[1]}</td>
+<td class="p-4">${r[2]}</td>
+<td class="p-4">${money(r[3])}</td>
+<td class="p-4 text-green-600 font-bold">Paid</td>
+</tr>`).join('');
+}
+
+function renderPremium(){
+const container=document.getElementById('premiumContent');
+
+if(isPremium){
+container.innerHTML=`
+<div class="bg-gradient-to-br from-purple-900 via-purple-700 to-fuchsia-600 rounded-3xl p-7 md:p-10 text-white premium-glow">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<div class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center mb-5">
+<i class="fa-solid fa-crown text-yellow-300 text-3xl"></i>
+</div>
+<span class="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">PREMIUM ACTIVE</span>
+<h2 class="text-3xl font-black mt-4">You're already Premium 👑</h2>
+<p class="text-purple-100 mt-3 max-w-xl">
+Your account has full access to LearVix Premium features including live classes and premium certificates.
+</p>
+</div>
+
+<div class="bg-white/10 rounded-2xl p-6 md:w-72">
+<p class="text-sm text-purple-100">Current Plan</p>
+<h3 class="text-2xl font-black mt-2">Premium</h3>
+<div class="h-px bg-white/20 my-4"></div>
+<p class="text-sm"><i class="fa-solid fa-check text-green-300 mr-2"></i>Live Classes</p>
+<p class="text-sm mt-3"><i class="fa-solid fa-check text-green-300 mr-2"></i>Premium Certificates</p>
+<p class="text-sm mt-3"><i class="fa-solid fa-check text-green-300 mr-2"></i>Lesson Notes</p>
+<p class="text-sm mt-3"><i class="fa-solid fa-check text-green-300 mr-2"></i>Full Learning Access</p>
+</div>
+</div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-5 mt-7">
+<div class="bg-white border rounded-2xl p-6">
+<i class="fa-solid fa-video text-purple-600 text-2xl"></i>
+<h3 class="font-black text-lg mt-4">Live Classes</h3>
+<p class="text-sm text-gray-500 mt-2">Join instructor-led classes and workshops.</p>
+</div>
+<div class="bg-white border rounded-2xl p-6">
+<i class="fa-solid fa-award text-purple-600 text-2xl"></i>
+<h3 class="font-black text-lg mt-4">Premium Certificates</h3>
+<p class="text-sm text-gray-500 mt-2">Receive branded Premium LearVix certificates.</p>
+</div>
+<div class="bg-white border rounded-2xl p-6">
+<i class="fa-solid fa-note-sticky text-purple-600 text-2xl"></i>
+<h3 class="font-black text-lg mt-4">Learning Tools</h3>
+<p class="text-sm text-gray-500 mt-2">Keep notes and track your learning progress.</p>
+</div>
+</div>`;
+return;
+}
+
+container.innerHTML=`
+<div class="grid lg:grid-cols-2 gap-7">
+<div class="bg-gradient-to-br from-purple-900 via-purple-700 to-fuchsia-600 rounded-3xl p-7 md:p-10 text-white premium-glow">
+<div class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center">
+<i class="fa-solid fa-crown text-yellow-300 text-3xl"></i>
+</div>
+<span class="inline-block text-xs bg-white/20 px-3 py-1 rounded-full font-bold mt-6">PREMIUM PLAN</span>
+<h2 class="text-3xl font-black mt-4">Learn More. Build More. Become More.</h2>
+<p class="text-purple-100 mt-4 leading-7">
+Upgrade your LearVix account and unlock the features designed for serious learners.
+</p>
+
+<div class="mt-7 space-y-4">
+<div class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-green-300"></i>
+<span>Access to live instructor classes</span>
+</div>
+<div class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-green-300"></i>
+<span>Premium certificates after completion</span>
+</div>
+<div class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-green-300"></i>
+<span>Lesson notes and full learning access</span>
+</div>
+<div class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-green-300"></i>
+<span>Premium learner status</span>
+</div>
+</div>
+</div>
+
+<div class="bg-white border rounded-3xl p-7 md:p-10">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-gray-500">LearVix Premium</p>
+<h2 class="text-4xl font-black mt-2">${money(50000)}</h2>
+<p class="text-sm text-gray-500 mt-1">One-time demo upgrade</p>
+</div>
+<div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center">
+<i class="fa-solid fa-crown text-2xl"></i>
+</div>
+</div>
+
+<div class="h-px bg-gray-200 my-7"></div>
+
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+<i class="fa-solid fa-video"></i>
+</div>
+<div>
+<b class="text-sm">Live Classes</b>
+<p class="text-xs text-gray-500">Join scheduled instructor classes.</p>
+</div>
+</div>
+
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+<i class="fa-solid fa-award"></i>
+</div>
+<div>
+<b class="text-sm">Premium Certificates</b>
+<p class="text-xs text-gray-500">Earn premium branded certificates.</p>
+</div>
+</div>
+
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+<i class="fa-solid fa-graduation-cap"></i>
+</div>
+<div>
+<b class="text-sm">Full Learning Experience</b>
+<p class="text-xs text-gray-500">Keep learning and tracking your progress.</p>
+</div>
+</div>
+</div>
+
+<button onclick="openPremiumPayment()" class="w-full gradient text-white py-4 rounded-xl mt-8 font-bold text-lg">
+<i class="fa-solid fa-crown mr-2"></i>Upgrade to Premium
+</button>
+
+<p class="text-center text-xs text-gray-400 mt-4">Demo payment — no real money will be charged.</p>
+</div>
+</div>`;
+}
+
+function openPremiumPayment(){
+if(isPremium){
+modal('Already Premium','Your LearVix account already has Premium access.','fa-crown');
+return;
+}
+
+document.getElementById('premiumPaymentModal').classList.add('show');
+}
+
+function closePremiumPayment(){
+document.getElementById('premiumPaymentModal').classList.remove('show');
+}
+
+function completePremiumPayment(){
+const method=document.getElementById('premiumPaymentMethod').value;
+
+localStorage.setItem('learvixPremium','true');
+localStorage.setItem('learvixPremiumDate','Sep 13, 2026');
+localStorage.setItem('learvixPremiumMethod',method);
+
+isPremium=true;
+
+closePremiumPayment();
+
+renderPremium();
+renderCertificates();
+renderPayments();
+renderClasses();
+updatePremiumUI();
+
+modal('Premium Activated!','Congratulations! Your LearVix account is now Premium. Live classes and Premium certificates are unlocked.','fa-crown');
+}
+
+function globalSearch(){
+const q=document.getElementById('search').value.toLowerCase().trim();
+
+if(!q){
+renderCatalog();
+return;
+}
+
+showDashboardPage('catalog');
+
+const results=programs.filter(p=>
+(p.title+' '+p.desc+' '+p.tag).toLowerCase().includes(q)
+);
+
+document.getElementById('catalogGrid').innerHTML=results.map(p=>programCard(p)).join('')||
+`
+<div class="col-span-full bg-white border rounded-2xl p-10 text-center">
+<i class="fa-solid fa-magnifying-glass text-3xl text-purple-500"></i>
+<h3 class="font-black text-xl mt-4">No programs found</h3>
+<p class="text-gray-500 mt-2">Try another computing skill.</p>
+</div>`;
+}
+
+function saveProfile(){
+const first=document.getElementById('firstName').value.trim();
+const last=document.getElementById('lastName').value.trim();
+const email=document.getElementById('email').value.trim();
+
+if(!first||!email){
+modal('Missing Information','Please enter your first name and email.','fa-circle-exclamation');
+return;
+}
+
+const full=(first+' '+last).trim();
+
+localStorage.setItem('learvixName',full);
+localStorage.setItem('learvixEmail',email);
+
+let user=JSON.parse(localStorage.getItem('learvixUser')||'null');
+
+if(user){
+user.name=full;
+user.email=email;
+localStorage.setItem('learvixUser',JSON.stringify(user));
+}
+
+document.getElementById('sideName').textContent=full;
+document.getElementById('welcome').textContent='Welcome back, '+first;
+
+modal('Profile Updated','Your profile information has been saved successfully.','fa-check');
+}
+
+function changePhoto(){
+const input=document.createElement('input');
+
+input.type='file';
+input.accept='image/png,image/jpeg';
+
+input.onchange=e=>{
+const f=e.target.files[0];
+
+if(!f)return;
+
+if(f.size>2*1024*1024){
+modal('Image Too Large','Please choose an image smaller than 2MB.','fa-image');
+return;
+}
+
+const r=new FileReader();
+
+r.onload=x=>{
+['settingsAvatar','sideAvatar','topAvatar'].forEach(id=>{
+document.getElementById(id).src=x.target.result;
+});
+
+localStorage.setItem('learvixAvatar',x.target.result);
+};
+
+r.readAsDataURL(f);
+};
+
+input.click();
+}
+
+function logout(){
+localStorage.removeItem('learvixLoggedIn');
+localStorage.removeItem('learvixRememberedEmail');
+
+document.getElementById('dashboardApp').classList.remove('active');
+document.getElementById('loginPage').classList.add('active');
+
+document.getElementById('loginEmail').value='';
+document.getElementById('loginPassword').value='';
+
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function loadUser(){
+const name=localStorage.getItem('learvixName');
+const email=localStorage.getItem('learvixEmail');
+const avatar=localStorage.getItem('learvixAvatar');
+
+if(name){
+const first=name.split(' ')[0];
+
+document.getElementById('sideName').textContent=name;
+document.getElementById('welcome').textContent='Welcome back, '+first;
+document.getElementById('firstName').value=first;
+document.getElementById('lastName').value=name.split(' ').slice(1).join(' ');
+}
+
+if(email){
+document.getElementById('email').value=email;
+}
+
+if(avatar){
+['settingsAvatar','sideAvatar','topAvatar'].forEach(id=>{
+document.getElementById(id).src=avatar;
+});
+}
+}
+
+function openSidebar(){
+document.getElementById('sidebar').classList.add('open');
+document.getElementById('overlay').classList.remove('hidden');
+document.getElementById('overlay').classList.add('show');
+}
+
+function closeSidebar(){
+document.getElementById('sidebar').classList.remove('open');
+document.getElementById('overlay').classList.add('hidden');
+document.getElementById('overlay').classList.remove('show');
+}
+
+function modal(title,text,icon='fa-check'){
+document.getElementById('modalTitle').textContent=title;
+document.getElementById('modalText').textContent=text;
+document.getElementById('modalIcon').innerHTML='<i class="fa-solid '+icon+'"></i>';
+document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(){
+document.getElementById('modal').classList.remove('show');
+}
+
+function openNotifications(){
+document.getElementById('notificationModal').classList.add('show');
+}
+
+function closeNotifications(){
+document.getElementById('notificationModal').classList.remove('show');
+}
+
+document.getElementById('modal').addEventListener('click',e=>{
+if(e.target.id==='modal')closeModal();
+});
+
+document.getElementById('notificationModal').addEventListener('click',e=>{
+if(e.target.id==='notificationModal')closeNotifications();
+});
+
+document.getElementById('premiumPaymentModal').addEventListener('click',e=>{
+if(e.target.id==='premiumPaymentModal')closePremiumPayment();
+});
+
+document.addEventListener('DOMContentLoaded',()=>{
+const rememberedEmail=localStorage.getItem('learvixRememberedEmail');
+
+if(rememberedEmail){
+document.getElementById('loginEmail').value=rememberedEmail;
+document.getElementById('rememberMe').checked=true;
+}
+
+refreshPremiumStatus();
+
+const loggedIn=localStorage.getItem('learvixLoggedIn');
+
+if(loggedIn==='true'&&localStorage.getItem('learvixUser')){
+showDashboard();
+}
+});
+
+</script>
+
+</body>
+</html>
