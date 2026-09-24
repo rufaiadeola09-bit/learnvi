@@ -154,7 +154,7 @@ transition:.3s ease;
 
 .sidebar-toggle{
 position:absolute;
-right:-15px;
+right:-25px;
 top:28px;
 width:30px;
 height:30px;
@@ -176,10 +176,6 @@ transform:translateX(-100%);
 .dashboard-app.sidebar-collapsed .dashboard-main{
 margin-left:0;
 width:100%;
-}
-
-.dashboard-app.sidebar-collapsed .sidebar-toggle i{
-transform:rotate(180deg);
 }
 
 .nav-btn{
@@ -1304,7 +1300,7 @@ class="sidebar-toggle"
 onclick="toggleSidebar()"
 aria-label="Toggle sidebar"
 >
-<i class="fa-solid fa-chevron-left"></i>
+<i id="sidebarIcon" class="fa-solid fa-chevron-left"></i>
 </button>
 
 <div class="px-6 py-6 flex items-center gap-3">
@@ -3236,72 +3232,55 @@ behavior:'smooth'
 }
 
 
+function setSidebarIcon(open){
+const icon=document.getElementById('sidebarIcon');
+if(!icon)return;
+icon.classList.toggle('fa-chevron-left',open);
+icon.classList.toggle('fa-chevron-right',!open);
+}
+
 function toggleSidebar(){
-
-const app=
-document.getElementById('dashboardApp');
-
-const sidebar=
-document.getElementById('sidebar');
-
+const app=document.getElementById('dashboardApp');
+const sidebar=document.getElementById('sidebar');
 if(window.innerWidth<=1023){
-
 sidebar.classList.toggle('open');
-
-const opened=
-sidebar.classList.contains('open');
-
-document.getElementById('overlay')
-.classList.toggle('show',opened);
-
-document.body.classList.toggle(
-'no-scroll',
-opened
-);
-
+const opened=sidebar.classList.contains('open');
+document.getElementById('overlay').classList.toggle('show',opened);
+document.body.classList.toggle('no-scroll',opened);
+setSidebarIcon(opened);
 return;
-
 }
-
 app.classList.toggle('sidebar-collapsed');
-
+const opened=!app.classList.contains('sidebar-collapsed');
+setSidebarIcon(opened);
 }
-
 
 function openSidebar(){
-
-const sidebar=
-document.getElementById('sidebar');
-
+const sidebar=document.getElementById('sidebar');
 if(window.innerWidth<=1023){
-
 sidebar.classList.add('open');
-
-document.getElementById('overlay')
-.classList.add('show');
-
+document.getElementById('overlay').classList.add('show');
 document.body.classList.add('no-scroll');
-
+setSidebarIcon(true);
 return;
-
 }
-
-document.getElementById('dashboardApp')
-.classList.remove('sidebar-collapsed');
-
+document.getElementById('dashboardApp').classList.remove('sidebar-collapsed');
+setSidebarIcon(true);
 }
 
 
 function closeSidebar(){
-
-document.getElementById('sidebar')
-.classList.remove('open');
-
-document.getElementById('overlay')
-.classList.remove('show');
-
+const sidebar=document.getElementById('sidebar');
+const app=document.getElementById('dashboardApp');
+sidebar.classList.remove('open');
+document.getElementById('overlay').classList.remove('show');
 document.body.classList.remove('no-scroll');
-
+if(window.innerWidth<=1023){
+setSidebarIcon(false);
+return;
+}
+app.classList.add('sidebar-collapsed');
+setSidebarIcon(false);
 }
 
 
