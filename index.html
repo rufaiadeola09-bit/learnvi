@@ -295,10 +295,7 @@ margin-left:0;
 width:100%;
 }
 
-.sidebar-toggle{
-right:-35px;
-top:20px;
-}
+
 
 }
 
@@ -312,12 +309,7 @@ transform:translateX(0);
 transform:translateX(-100%);
 }
 
-.dashboard-app.sidebar-collapsed .sidebar-toggle{
-position:fixed;
-left:18px;
-right:auto;
-top:28px;
-}
+
 
 }
 
@@ -1458,18 +1450,6 @@ Settings
 </button>
 
 </nav>
-
-<div class="p-4 border-t">
-
-<button
-onclick="logout()"
-class="w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm text-red-500 hover:bg-red-50"
->
-<i class="fa-solid fa-right-from-bracket"></i>
-Log Out
-</button>
-
-</div>
 
 </div>
 
@@ -2646,6 +2626,26 @@ class="w-5 h-5 accent-purple-600"
 >
 
 </label>
+
+</div>
+
+<div class="bg-white border rounded-2xl p-6">
+
+<h2 class="font-black text-xl">
+Account
+</h2>
+
+<p class="text-sm text-gray-500 mt-2">
+Sign out of your LearnVix student account.
+</p>
+
+<button
+onclick="logout()"
+class="w-full flex items-center justify-center gap-3 bg-red-50 text-red-600 hover:bg-red-100 px-5 py-3 rounded-xl mt-5 font-bold transition"
+>
+<i class="fa-solid fa-right-from-bracket"></i>
+Log Out
+</button>
 
 </div>
 
