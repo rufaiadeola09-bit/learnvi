@@ -152,21 +152,23 @@ min-width:0;
 transition:.3s ease;
 }
 
-.sidebar-toggle{
-position:absolute;
-right:-25px;
-top:28px;
-width:30px;
-height:30px;
-border-radius:50%;
-background:#7412ad;
-color:white;
+.sidebar-exit{
+width:100%;
 display:flex;
 align-items:center;
-justify-content:center;
-z-index:60;
-border:3px solid #f8f6fb;
-box-shadow:0 4px 12px rgba(0,0,0,.15);
+gap:10px;
+padding:12px 20px;
+margin-bottom:6px;
+background:#f5e9fa;
+color:#7e22ce;
+border:0;
+font-weight:800;
+font-size:14px;
+text-align:left;
+}
+
+.sidebar-exit:hover{
+background:#ead0f4;
 }
 
 .dashboard-app.sidebar-collapsed .sidebar{
@@ -296,7 +298,6 @@ width:100%;
 }
 
 
-
 }
 
 @media(min-width:1024px){
@@ -308,7 +309,6 @@ transform:translateX(0);
 .dashboard-app.sidebar-collapsed .sidebar{
 transform:translateX(-100%);
 }
-
 
 
 }
@@ -1287,12 +1287,12 @@ class="sidebar fixed z-50 top-0 left-0 h-screen bg-white border-r"
 <div class="sidebar-content h-full flex flex-col relative">
 
 <button
-id="sidebarToggle"
-class="sidebar-toggle"
-onclick="toggleSidebar()"
-aria-label="Toggle sidebar"
+class="sidebar-exit"
+onclick="closeSidebar()"
+aria-label="Close sidebar"
 >
-<i id="sidebarIcon" class="fa-solid fa-chevron-left"></i>
+<i class="fa-solid fa-arrow-left"></i>
+<span>Exit</span>
 </button>
 
 <div class="px-6 py-6 flex items-center gap-3">
@@ -1450,6 +1450,18 @@ Settings
 </button>
 
 </nav>
+
+<div class="p-4 border-t">
+
+<button
+onclick="logout()"
+class="w-full flex gap-3 items-center px-4 py-3 rounded-lg text-sm text-red-500 hover:bg-red-50"
+>
+<i class="fa-solid fa-right-from-bracket"></i>
+Log Out
+</button>
+
+</div>
 
 </div>
 
@@ -2629,26 +2641,6 @@ class="w-5 h-5 accent-purple-600"
 
 </div>
 
-<div class="bg-white border rounded-2xl p-6">
-
-<h2 class="font-black text-xl">
-Account
-</h2>
-
-<p class="text-sm text-gray-500 mt-2">
-Sign out of your LearnVix student account.
-</p>
-
-<button
-onclick="logout()"
-class="w-full flex items-center justify-center gap-3 bg-red-50 text-red-600 hover:bg-red-100 px-5 py-3 rounded-xl mt-5 font-bold transition"
->
-<i class="fa-solid fa-right-from-bracket"></i>
-Log Out
-</button>
-
-</div>
-
 </div>
 
 </section>
@@ -3232,55 +3224,72 @@ behavior:'smooth'
 }
 
 
-function setSidebarIcon(open){
-const icon=document.getElementById('sidebarIcon');
-if(!icon)return;
-icon.classList.toggle('fa-chevron-left',open);
-icon.classList.toggle('fa-chevron-right',!open);
+function toggleSidebar(){
+
+const app=
+document.getElementById('dashboardApp');
+
+const sidebar=
+document.getElementById('sidebar');
+
+if(window.innerWidth<=1023){
+
+sidebar.classList.toggle('open');
+
+const opened=
+sidebar.classList.contains('open');
+
+document.getElementById('overlay')
+.classList.toggle('show',opened);
+
+document.body.classList.toggle(
+'no-scroll',
+opened
+);
+
+return;
+
 }
 
-function toggleSidebar(){
-const app=document.getElementById('dashboardApp');
-const sidebar=document.getElementById('sidebar');
-if(window.innerWidth<=1023){
-sidebar.classList.toggle('open');
-const opened=sidebar.classList.contains('open');
-document.getElementById('overlay').classList.toggle('show',opened);
-document.body.classList.toggle('no-scroll',opened);
-setSidebarIcon(opened);
-return;
-}
 app.classList.toggle('sidebar-collapsed');
-const opened=!app.classList.contains('sidebar-collapsed');
-setSidebarIcon(opened);
+
 }
+
 
 function openSidebar(){
-const sidebar=document.getElementById('sidebar');
+
+const sidebar=
+document.getElementById('sidebar');
+
 if(window.innerWidth<=1023){
+
 sidebar.classList.add('open');
-document.getElementById('overlay').classList.add('show');
+
+document.getElementById('overlay')
+.classList.add('show');
+
 document.body.classList.add('no-scroll');
-setSidebarIcon(true);
+
 return;
+
 }
-document.getElementById('dashboardApp').classList.remove('sidebar-collapsed');
-setSidebarIcon(true);
+
+document.getElementById('dashboardApp')
+.classList.remove('sidebar-collapsed');
+
 }
 
 
 function closeSidebar(){
-const sidebar=document.getElementById('sidebar');
-const app=document.getElementById('dashboardApp');
-sidebar.classList.remove('open');
-document.getElementById('overlay').classList.remove('show');
+
+document.getElementById('sidebar')
+.classList.remove('open');
+
+document.getElementById('overlay')
+.classList.remove('show');
+
 document.body.classList.remove('no-scroll');
-if(window.innerWidth<=1023){
-setSidebarIcon(false);
-return;
-}
-app.classList.add('sidebar-collapsed');
-setSidebarIcon(false);
+
 }
 
 
